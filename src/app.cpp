@@ -50,14 +50,14 @@ void App::menu()
                 window.close();
             }
         }
-        /*if (startIcon_shape.getGlobalBounds().contains(mouse))
+        if (startIcon_shape.getGlobalBounds().contains(mouse))
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 game.runGame(window);
             }
         }
-        else*/ if (exitIcon_shape.getGlobalBounds().contains(mouse))
+        else if (exitIcon_shape.getGlobalBounds().contains(mouse))
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {

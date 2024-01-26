@@ -21,7 +21,30 @@
 
 class Game
 {
-public:
 private:
-int score = 0;
+    int score = 0;
+    std::string set_score();
+    void tryAgain(sf::RenderWindow &window, sf::Text point);
+    //----------------- set sound -----------------
+    sf::SoundBuffer back_sound;
+    sf::SoundBuffer eat_sound;
+    sf::SoundBuffer gameover_sound;
+    //---------------------------------------------
+    //------------------- set font ----------------
+    sf::Font font;
+    //---------------------------------------------
+
+    //------------------ set photo ----------------
+    sf::Texture texture;
+    sf::Texture heli_image;
+    sf::Texture enemy_image;
+   // sf::Texture frog2_image;
+    //---------------------------------------------
+
+public:
+    
+    enemy enemy;
+    //Frog frog2;
+    heli heli;
+    void runGame(sf::RenderWindow &window);
 };
