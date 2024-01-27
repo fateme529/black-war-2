@@ -1,4 +1,5 @@
 #include "../include/enemy.hpp"
+// row random
 int enemy::enemyStartpos()
 {
     int random = 0;

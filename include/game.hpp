@@ -38,13 +38,13 @@ private:
     sf::Texture texture;
     sf::Texture heli_image;
     sf::Texture enemy_image;
-   // sf::Texture frog2_image;
+    sf::Texture enemy2_image;
     //---------------------------------------------
 
 public:
     
-    enemy enemy;
-    //Frog frog2;
+    enemy enemy1;
+    enemy enemy2;
     heli heli;
     void runGame(sf::RenderWindow &window);
 };

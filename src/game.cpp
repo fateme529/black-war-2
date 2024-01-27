@@ -10,12 +10,12 @@ void Game::runGame(sf::RenderWindow &window)
     try
     {
         font.loadFromFile("font/font.ttf");
-       // back_sound.loadFromFile("sound/back_sound.wav");
-      //  eat_sound.loadFromFile("sound/eat_sound.wav");
-      //  gameover_sound.loadFromFile("sound/gameover_sound.wav");
+        // back_sound.loadFromFile("sound/back_sound.wav");
+        //  eat_sound.loadFromFile("sound/eat_sound.wav");
+        //  gameover_sound.loadFromFile("sound/gameover_sound.wav");
         texture.loadFromFile("picture/back.jpg");
         enemy_image.loadFromFile("picture/frog.png");
-       // frog2_image.loadFromFile("picture/frog.png");
+        enemy2_image.loadFromFile("picture/frog.png");
         heli_image.loadFromFile("picture/snake.png");
     }
     catch (const std::exception &e)
@@ -37,32 +37,30 @@ void Game::runGame(sf::RenderWindow &window)
     //---------------------------------------------
 
     // --------------- handle sound ---------------
-   // sf::Sound back(back_sound);
-   // back.setLoop(true);
-   // sf::Sound eat(eat_sound);
-   // sf::Sound gameover(gameover_sound);
-   // back.play();
+    // sf::Sound back(back_sound);
+    // back.setLoop(true);
+    // sf::Sound eat(eat_sound);
+    // sf::Sound gameover(gameover_sound);
+    // back.play();
     //---------------------------------------------
 
     //----------------- handle photo --------------
     sf::RectangleShape rectengle(sf::Vector2f(800, 600)); // safhe
     sf::RectangleShape enemy_shape(sf::Vector2f(50, 50)); // enemy
-    //sf::RectangleShape frog2_shape(sf::Vector2f(50, 50));
-    sf::RectangleShape heli_shape(sf::Vector2f(130, 120));// 
+    sf::RectangleShape enemy2_shape(sf::Vector2f(50, 50));
+    sf::RectangleShape heli_shape(sf::Vector2f(130, 120));
     rectengle.setTexture(&texture);
     heli_shape.setTexture(&heli_image);
     enemy_shape.setTexture(&enemy_image);
-   // frog2_shape.setTexture(&frog2_image);
+    enemy2_shape.setTexture(&enemy2_image);
     //---------------------------------------------
 
     //---- set start positin for frog and snake ---
-    heli_shape.setPosition(sf::Vector2f(x_SIZE-800 ,y_SIZE-400));
-    enemy_shape.setPosition(sf::Vector2f(enemy.enemyStartpos(), -50));
-    //frog2_shape.setPosition(sf::Vector2f(frog1.frogStartpos(), -50));
+    heli_shape.setPosition(sf::Vector2f(x_SIZE - 800, y_SIZE - 400));
+    enemy_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), 70));
+    enemy2_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), 80));
     //---------------------------------------------
 
-    //----------- handle screen window ------------
-   // bool frog_2 = false;
     while (window.isOpen())
     {
 
@@ -75,48 +73,49 @@ void Game::runGame(sf::RenderWindow &window)
                 window.close();
             }
             // mibare payin
-            else if (event.key.code == sf::Keyboard::Key::D)
+            else if (event.key.code == sf::Keyboard::Key::D) // down
             {
-                if (heli_shape.getPosition().y <550)
+                if (heli_shape.getPosition().y < 500)
                 {
                     heli_shape.move(sf::Vector2f(0, heli.get_heliSpeed()));
                 }
                 //------ check out of range snake line --------
-                else
-                {
-                   // heli_shape.setPosition(sf::Vector2f(x_SIZE , y_SIZE -100));
-                }
+                // else
+                //{
+                // heli_shape.setPosition(sf::Vector2f(x_SIZE , y_SIZE -100));
+                //}
                 //---------------------------------------------
             }
             // mibare bala
-            else if (event.key.code == sf::Keyboard::Key::A)
-             {
-                 if (heli_shape.getPosition().y > 0)
-                 {
-                     heli_shape.move(sf::Vector2f(0, -heli.get_heliSpeed()));
-                 }
-                 //------ check out of range snake line --------
-                 else
-                 {
-                    // heli_shape.setPosition(sf::Vector2f(x_SIZE, y_SIZE +100));
-                 }
-                 //---------------------------------------------
-             }
-         }
+            else if (event.key.code == sf::Keyboard::Key::A) // up
+            {
+                if (heli_shape.getPosition().y > 0)
+                {
+                    heli_shape.move(sf::Vector2f(0, -heli.get_heliSpeed()));
+                }
+                //------ check out of range snake line --------
+                // else
+                //{
+                // heli_shape.setPosition(sf::Vector2f(x_SIZE, y_SIZE +100));
+                //}
+                //---------------------------------------------
+            }
+        }
+        //----------- handle screen window ------------
+        bool enemy_2 = false;
+        // ---------------------------------------------
 
-       // ---------------------------------------------
+        if (enemy_shape.getPosition().x < 100)
+        {
+            enemy_2 = true;
+        }
+        if (enemy_2)
+        {
+            enemy2_shape.move(sf::Vector2f(-enemy1.enemy_getSpeed(), 0));
+        }
 
-        // if (frog_shape.getPosition().y > 200)
-        // {
-        //     frog_2 = true;
-        // }
-        // if (frog_2)
-        // {
-        //     frog2_shape.move(sf::Vector2f(0, frog1.enemy_getSpeed()));
-        // }
-
-        //--------- down frog from line ---------------
-        // enemy_shape.move(sf::Vector2f(0, e.enemy_getSpeed()));
+        //--------- right to left frog from line ---------------
+        enemy_shape.move(sf::Vector2f(-enemy1.enemy_getSpeed(), 0));
 
         //---------------------------------------------
 
@@ -147,14 +146,14 @@ void Game::runGame(sf::RenderWindow &window)
         //---------------------------------------------
 
         //------ check hit between frog and floor -----
-        // if (frog_shape.getPosition().y > y_SIZE)
+        // if (enemy_shape.getPosition().y > y_SIZE)
         // {
-        //     gameover.play();
+        //     //gameover.play();
         //     tryAgain(window, point);
         // }
-        // // if (frog2_shape.getPosition().y > y_SIZE)
+        //  if (enemy2_shape.getPosition().y > y_SIZE)
         // {
-        //     gameover.play();
+        //    // gameover.play();
         //     tryAgain(window, point);
         // }
         //---------------------------------------------
@@ -163,7 +162,7 @@ void Game::runGame(sf::RenderWindow &window)
         window.clear();
         window.draw(rectengle);
         window.draw(enemy_shape);
-        //window.draw(frog2_shape);
+        window.draw(enemy2_shape);
         window.draw(heli_shape);
         window.draw(point);
         window.draw(text);
@@ -173,15 +172,15 @@ void Game::runGame(sf::RenderWindow &window)
     //---------------------------------------------
 }
 // --------------------------------------------------------------------------------------------------
-// string Game::set_score()
-// {
+string Game::set_score()
+{
 
-//     stringstream temp;
-//     temp << score;
-//     string point;
-//     temp >> point;
-//     return point;
-// }
+    stringstream temp;
+    temp << score;
+    string point;
+    temp >> point;
+    return point;
+}
 // void Game::tryAgain(sf::RenderWindow &window, sf::Text point)
 // {
 //     // ----------- write score in file ---------
@@ -275,39 +274,39 @@ void Game::runGame(sf::RenderWindow &window)
 
 //     // -----------------------------------------
 
-    // while (window.isOpen())
-    // {
-    //     sf ::Event event;
-    //     sf::Vector2f mouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+// while (window.isOpen())
+// {
+//     sf ::Event event;
+//     sf::Vector2f mouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-    //     while (window.pollEvent(event))
-    //     {
-    //         if (event.type == sf::Event::EventType::Closed)
-    //         {
-    //             window.close();
-    //         }
-    //         else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-    //         {
-    //             window.close();
-    //         }
-    //     }
-    //     if (tryAgainIcon_shape.getGlobalBounds().contains(mouse))
-    //     {
-    //         score = 0;
-    //         enemy.enemy_speed_reset();
-    //         heli.reset_heliSpeed();
-    //         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    //         {
-    //             runGame(window);
-    //         }
-    //     }
-    //     else if (exitIcon_shape.getGlobalBounds().contains(mouse))
-    //     {
-    //         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    //         {
-    //             window.close();
-    //         }
-    //     }
+//     while (window.pollEvent(event))
+//     {
+//         if (event.type == sf::Event::EventType::Closed)
+//         {
+//             window.close();
+//         }
+//         else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+//         {
+//             window.close();
+//         }
+//     }
+//     if (tryAgainIcon_shape.getGlobalBounds().contains(mouse))
+//     {
+//         score = 0;
+//         enemy.enemy_speed_reset();
+//         heli.reset_heliSpeed();
+//         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//         {
+//             runGame(window);
+//         }
+//     }
+//     else if (exitIcon_shape.getGlobalBounds().contains(mouse))
+//     {
+//         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//         {
+//             window.close();
+//         }
+//     }
 //         // ----------------- handle rendering ------------
 //         window.clear();
 //         window.draw(back_blur_shape);
