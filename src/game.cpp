@@ -57,8 +57,8 @@ void Game::runGame(sf::RenderWindow &window)
 
     //---- set start positin for frog and snake ---
     heli_shape.setPosition(sf::Vector2f(x_SIZE - 800, y_SIZE - 400));
-    enemy_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), 70));
-    enemy2_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), 80));
+    enemy_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), 50));
+    enemy2_shape.setPosition(sf::Vector2f(800,5)); // felan dorest she
     //---------------------------------------------
 
     while (window.isOpen())
@@ -89,7 +89,7 @@ void Game::runGame(sf::RenderWindow &window)
             // mibare bala
             else if (event.key.code == sf::Keyboard::Key::A) // up
             {
-                if (heli_shape.getPosition().y > 0)
+                if (heli_shape.getPosition().y > -40)
                 {
                     heli_shape.move(sf::Vector2f(0, -heli.get_heliSpeed()));
                 }
@@ -101,15 +101,14 @@ void Game::runGame(sf::RenderWindow &window)
                 //---------------------------------------------
             }
         }
-        //----------- handle screen window ------------
-        bool enemy_2 = false;
+
         // ---------------------------------------------
 
-        if (enemy_shape.getPosition().x < 100)
+        if (enemy_shape.getPosition().x <200)
         {
             enemy_2 = true;
         }
-        if (enemy_2)
+         if (enemy_2)
         {
             enemy2_shape.move(sf::Vector2f(-enemy1.enemy_getSpeed(), 0));
         }

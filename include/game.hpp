@@ -25,6 +25,8 @@ private:
     int score = 0;
     std::string set_score();
     void tryAgain(sf::RenderWindow &window, sf::Text point);
+    //----------- handle screen window ------------
+    bool enemy_2 = false;
     //----------------- set sound -----------------
     sf::SoundBuffer back_sound;
     sf::SoundBuffer eat_sound;
@@ -42,7 +44,6 @@ private:
     //---------------------------------------------
 
 public:
-    
     enemy enemy1;
     enemy enemy2;
     heli heli;
