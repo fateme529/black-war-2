@@ -3,6 +3,7 @@
 #include "../include/enemy.hpp"
 #include "../include/heli.hpp"
 #include "../include/shoot.hpp"
+#include "../include/barrier.hpp"
 
 #define row 12
 #define column 9
@@ -29,11 +30,13 @@ private:
     //----------- handle screen window ------------
     bool enemy_2 = false;
     bool shoot_2 = false;
-    //bool shoot_1 = false;
+    bool barrier_2 = false;
     //----------------- set sound -----------------
-    sf::SoundBuffer back_sound;
-    sf::SoundBuffer eat_sound;
+
+    sf::SoundBuffer shoot_sound;
     sf::SoundBuffer gameover_sound;
+    sf::SoundBuffer barrier_sound;
+    sf::SoundBuffer gun_sound;
     //---------------------------------------------
     //------------------- set font ----------------
     sf::Font font;
@@ -46,6 +49,8 @@ private:
     sf::Texture shoot2_image;
     sf::Texture enemy_image;
     sf::Texture enemy2_image;
+    sf::Texture barrier_image;
+    sf::Texture barrier2_image;
     //---------------------------------------------
 
 public:
@@ -54,5 +59,7 @@ public:
     heli heli;
     shoot shoot1;
     shoot shoot2;
+    barrier barrier1;
+    barrier barrier2;
     void runGame(sf::RenderWindow &window);
 };

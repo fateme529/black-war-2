@@ -1,6 +1,7 @@
 #include "../include/game.hpp"
 using namespace std;
 #include <ctype.h>
+
 void Game::runGame(sf::RenderWindow &window)
 {
     srand((unsigned)time(NULL));
@@ -10,15 +11,19 @@ void Game::runGame(sf::RenderWindow &window)
     try
     {
         font.loadFromFile("font/font.ttf");
-        // back_sound.loadFromFile("sound/back_sound.wav");
-        //  eat_sound.loadFromFile("sound/eat_sound.wav");
-        //  gameover_sound.loadFromFile("sound/gameover_sound.wav");
+
+        shoot_sound.loadFromFile("sound/shoot_sound.wav");
+        gameover_sound.loadFromFile("sound/gameover_sound.wav");
+        barrier_sound.loadFromFile("sound/barrier_sound.wav");
+        gun_sound.loadFromFile("sound/gun_sound.wav");
         texture.loadFromFile("picture/back.jpg");
         enemy_image.loadFromFile("picture/enemy.png");
         enemy2_image.loadFromFile("picture/enemy.png");
-        heli_image.loadFromFile("picture/snake.png");
-        shoot_image.loadFromFile("picture/frog.png");
-        shoot2_image.loadFromFile("picture/frog.png");
+        heli_image.loadFromFile("picture/heli.png");
+        shoot_image.loadFromFile("picture/shoot.png");
+        shoot2_image.loadFromFile("picture/shoot.png");
+        barrier_image.loadFromFile("picture/barrier.png");
+        barrier2_image.loadFromFile("picture/barrier.png");
     }
     catch (const std::exception &e)
     {
@@ -41,8 +46,10 @@ void Game::runGame(sf::RenderWindow &window)
     // --------------- handle sound ---------------
     // sf::Sound back(back_sound);
     // back.setLoop(true);
-    // sf::Sound eat(eat_sound);
-    // sf::Sound gameover(gameover_sound);
+    sf::Sound shoot(shoot_sound);
+    sf::Sound gameover(gameover_sound);
+    sf::Sound barrier(barrier_sound);
+    sf::Sound gun(gun_sound);
     // back.play();
     //---------------------------------------------
 
@@ -53,12 +60,18 @@ void Game::runGame(sf::RenderWindow &window)
     sf::RectangleShape heli_shape(sf::Vector2f(130, 120));
     sf::RectangleShape shoot_shape(sf::Vector2f(30, 30));
     sf::RectangleShape shoot2_shape(sf::Vector2f(30, 30));
+    sf::RectangleShape barrier_shape(sf::Vector2f(50, 50)); // enemy
+    sf::RectangleShape barrier2_shape(sf::Vector2f(50, 50));
+
+    //---------------------------------------------
     rectengle.setTexture(&texture);
     heli_shape.setTexture(&heli_image);
     enemy_shape.setTexture(&enemy_image);
     enemy2_shape.setTexture(&enemy2_image);
     shoot_shape.setTexture(&shoot_image);
     shoot2_shape.setTexture(&shoot2_image);
+    barrier_shape.setTexture(&barrier_image);
+    barrier2_shape.setTexture(&barrier2_image);
     //---------------------------------------------
 
     //---- set start positin for frog and snake ---
@@ -67,6 +80,8 @@ void Game::runGame(sf::RenderWindow &window)
     enemy2_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos())); // felan dorest she
     shoot_shape.setPosition(sf::Vector2f(heli_shape.getPosition().x + 110, -50));
     shoot2_shape.setPosition(sf::Vector2f(heli_shape.getPosition().x + 110, -50));
+    barrier_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos()));
+    barrier2_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos())); // felan dorest she
 
     //---------------------------------------------
 
@@ -81,55 +96,48 @@ void Game::runGame(sf::RenderWindow &window)
             {
                 window.close();
             }
-            // mibare payin
+            // DOWN
             else if (event.key.code == sf::Keyboard::Key::D) // down
             {
                 if (heli_shape.getPosition().y < 500)
                 {
                     heli_shape.move(sf::Vector2f(0, heli.get_heliSpeed()));
                 }
-                //------ check out of range snake line --------
-                // else
-                //{
-                // heli_shape.setPosition(sf::Vector2f(x_SIZE , y_SIZE -100));
-                //}
+
                 //---------------------------------------------
             }
-            // mibare bala
+            // UP
             else if (event.key.code == sf::Keyboard::Key::A) // up
             {
                 if (heli_shape.getPosition().y > -40)
                 {
                     heli_shape.move(sf::Vector2f(0, -heli.get_heliSpeed()));
                 }
-                //------ check out of range snake line --------
-                // else
-                //{
-                // heli_shape.setPosition(sf::Vector2f(x_SIZE, y_SIZE +100));
-                //}
-                //---------------------------------------------
             }
+            // SHOOT
             else if (event.key.code == sf::Keyboard::Key::W) // shoot
             {
+               
                 if (shoot_shape.getPosition().y == -50)
                 {
+                     gun.play();
                     shoot_shape.setPosition(sf::Vector2f(heli_shape.getPosition().x + 110, heli_shape.getPosition().y + 60));
                     
                 }
-                else if (shoot2_shape.getPosition().y == -50 && shoot_shape.getPosition().x>600)
+                else if (shoot2_shape.getPosition().y == -50 && shoot_shape.getPosition().x > 600)
                 {
+                    gun.play();
                     shoot2_shape.setPosition(sf::Vector2f(heli_shape.getPosition().x + 110, heli_shape.getPosition().y + 60));
-                     shoot_2 =true;
+                    shoot_2 = true;
                 }
             }
         }
 
-        // ---------------------------------------------
         
-            shoot_shape.move(sf::Vector2f(+shoot1.shoot_getSpeed(), 0));
-            
-         
-    
+        //--------- left to right shoot from line  ---------------
+        shoot_shape.move(sf::Vector2f(+shoot1.shoot_getSpeed(), 0));
+        // ---------------------------------------------
+
         if (shoot_2 = true)
         {
             shoot2_shape.move(sf::Vector2f(+shoot1.shoot_getSpeed(), 0));
@@ -144,34 +152,136 @@ void Game::runGame(sf::RenderWindow &window)
             enemy2_shape.move(sf::Vector2f(-enemy1.enemy_getSpeed(), 0));
         }
 
+        if (barrier_shape.getPosition().x < 200)
+        {
+            barrier_2 = true;
+        }
+        if (barrier_2)
+        {
+            //--------- right to left enemy2 from line  ---------------
+            barrier2_shape.move(sf::Vector2f(-barrier1.barrier_getSpeed(), 0));
+        }
+
         //--------- right to left enemy1 from line  ---------------
         enemy_shape.move(sf::Vector2f(-enemy1.enemy_getSpeed(), 0));
 
-        //---------------------------------------------
+        //--------- right to left barrier1 from line  ---------------
+        barrier_shape.move(sf::Vector2f(-barrier1.barrier_getSpeed(), 0));
 
         //------ check hit between heli and enemy1------>gameover
         if (enemy_shape.getGlobalBounds().intersects(heli_shape.getGlobalBounds()))
         {
 
-            // eat.play(); // sound game over
+            gameover.play(); // sound game over
             enemy_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), -50));
             tryAgain(window, point);
         }
         //------ check hit between heli and enemy2------>gameover
         if (enemy2_shape.getGlobalBounds().intersects(heli_shape.getGlobalBounds()))
         {
-
+            gameover.play(); // sound game over
             enemy2_shape.setPosition(sf::Vector2f(enemy1.enemyStartpos(), -50));
             tryAgain(window, point);
         }
-        //---------------------------------------------
+        //------ check hit between heli and barrier1------>gameover
+        if (barrier_shape.getGlobalBounds().intersects(heli_shape.getGlobalBounds()))
+        {
 
+            gameover.play(); // sound game over
+            barrier_shape.setPosition(sf::Vector2f(barrier1.barrierStartpos(), -50));
+            tryAgain(window, point);
+        }
+        //------ check hit between heli and barrier2------>gameover
+        if (barrier2_shape.getGlobalBounds().intersects(heli_shape.getGlobalBounds()))
+        {
+            gameover.play(); // sound game over
+            barrier2_shape.setPosition(sf::Vector2f(barrier1.barrierStartpos(), -50));
+            tryAgain(window, point);
+        }
+        //---------------------------------------------
+        //------ check hit between shoot1 and enemy1------>score
+        if (shoot_shape.getGlobalBounds().intersects(enemy_shape.getGlobalBounds()))
+        {
+            shoot.play();
+            enemy_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos()));
+            shoot_shape.setPosition(sf::Vector2f(-50, -50));
+             enemy1.enemy_setSpeed();
+            //  ---- update player point-----
+            score++;
+            point.setString(set_score());
+            // -----------------------------
+             heli.set_heliSpeed();
+             barrier1.barrier_setSpeed();
+             shoot1.shoot_setSpeed();
+        }
+        else if (shoot_shape.getGlobalBounds().intersects(enemy2_shape.getGlobalBounds()))
+        {
+            shoot.play();
+            enemy2_shape.setPosition(sf::Vector2f(800, enemy2.enemyStartpos()));
+            shoot_shape.setPosition(sf::Vector2f(-50, -50));
+             enemy2.enemy_setSpeed();
+            // ---- update player point-----
+            score++;
+            point.setString(set_score());
+            // -----------------------------
+             heli.set_heliSpeed();
+             barrier2.barrier_setSpeed();
+             shoot2.shoot_setSpeed();
+        }
+        //------ check hit between shoot2 and enemy2------>score
+        if (shoot2_shape.getGlobalBounds().intersects(enemy_shape.getGlobalBounds()))
+        {
+            shoot.play();
+            enemy_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos()));
+            shoot2_shape.setPosition(sf::Vector2f(-50, -50));
+            // enemy1.enemy_setSpeed();
+            // ---- update player point-----
+            score++;
+            point.setString(set_score());
+            // -----------------------------
+            // heli.set_heliSpeed();
+        }
+        else if (shoot2_shape.getGlobalBounds().intersects(enemy2_shape.getGlobalBounds()))
+        {
+            shoot.play();
+            enemy2_shape.setPosition(sf::Vector2f(800, enemy2.enemyStartpos()));
+            shoot2_shape.setPosition(sf::Vector2f(-50, -50));
+            // enemy2.enemy_setSpeed();
+            //  ---- update player point-----
+            score++;
+            point.setString(set_score());
+            // -----------------------------
+            // heli.set_heliSpeed();
+        }
+
+        //------ check hit between shoot1 and barrier1------>hide shoot
+        if (shoot_shape.getGlobalBounds().intersects(barrier_shape.getGlobalBounds()))
+        {
+            barrier.play();
+            shoot_shape.setPosition(sf::Vector2f(-50, -50));
+        }
+        else if (shoot_shape.getGlobalBounds().intersects(barrier2_shape.getGlobalBounds()))
+        {
+            barrier.play();
+            shoot2_shape.setPosition(sf::Vector2f(-50, -50));
+        }
+        //------ check hit between shoot2 and barrier2------>score
+        if (shoot2_shape.getGlobalBounds().intersects(barrier_shape.getGlobalBounds()))
+        {
+            barrier.play();
+            shoot_shape.setPosition(sf::Vector2f(-50, -50));
+        }
+        else if (shoot2_shape.getGlobalBounds().intersects(barrier2_shape.getGlobalBounds()))
+        {
+            barrier.play();
+            shoot2_shape.setPosition(sf::Vector2f(-50, -50));
+        }
         //------ check hit between enemy and floor -----
         if (enemy_shape.getPosition().x < 10)
         {
             enemy_shape.setPosition(sf::Vector2f(800, enemy1.enemyStartpos())); // vaghti  be mar bokhore ghorbaghe az bin mire
-            enemy1.enemy_setSpeed();
-            heli.set_heliSpeed();
+                                                                                // enemy1.enemy_setSpeed();
+                                                                                // heli.set_heliSpeed();
         }
         if (enemy2_shape.getPosition().x < 10)
         {
@@ -192,14 +302,24 @@ void Game::runGame(sf::RenderWindow &window)
 
             shoot2_shape.setPosition(sf::Vector2f(heli_shape.getPosition().x + 110, -50));
         }
-        //----
-        //---------------------------------------------
+        //------ check hit between barrier and floor -----
+        if (barrier_shape.getPosition().x < 10)
+        {
+            barrier_shape.setPosition(sf::Vector2f(800, barrier1.barrierStartpos())); // vaghti  be mar bokhore ghorbaghe az bin mire
+        }
+        if (barrier2_shape.getPosition().x < 10)
+        {
+
+            barrier2_shape.setPosition(sf::Vector2f(800, barrier1.barrierStartpos()));
+        }
 
         //----------- handle rendering ----------------
         window.clear();
         window.draw(rectengle);
         window.draw(shoot_shape);
         window.draw(shoot2_shape);
+        window.draw(barrier_shape);
+        window.draw(barrier2_shape);
         window.draw(enemy_shape);
         window.draw(enemy2_shape);
         window.draw(heli_shape);

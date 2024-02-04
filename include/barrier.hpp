@@ -6,15 +6,14 @@
 #include <iomanip>
 #define x_SIZE 800
 #define y_SIZE 600
-
-class shoot
+class barrier 
 {
 public:
-    
-    void shoot_setSpeed();
-    float shoot_getSpeed();
-    void shoot_speed_reset();
+    int barrierStartpos();
+    void barrier_setSpeed();
+    float barrier_getSpeed();
+    void barrier_speed_reset();
 
 private:
-    float shootSpeed = 1;
+    float barrierSpeed = 1;
 };
