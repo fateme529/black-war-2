@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "../include/enemy.hpp"
 #include "../include/heli.hpp"
+#include "../include/shoot.hpp"
 
 #define row 12
 #define column 9
@@ -27,6 +28,8 @@ private:
     void tryAgain(sf::RenderWindow &window, sf::Text point);
     //----------- handle screen window ------------
     bool enemy_2 = false;
+    bool shoot_2 = false;
+    //bool shoot_1 = false;
     //----------------- set sound -----------------
     sf::SoundBuffer back_sound;
     sf::SoundBuffer eat_sound;
@@ -39,6 +42,8 @@ private:
     //------------------ set photo ----------------
     sf::Texture texture;
     sf::Texture heli_image;
+    sf::Texture shoot_image;
+    sf::Texture shoot2_image;
     sf::Texture enemy_image;
     sf::Texture enemy2_image;
     //---------------------------------------------
@@ -47,5 +52,7 @@ public:
     enemy enemy1;
     enemy enemy2;
     heli heli;
+    shoot shoot1;
+    shoot shoot2;
     void runGame(sf::RenderWindow &window);
 };
